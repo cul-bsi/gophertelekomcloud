@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/opentelekomcloud/gophertelekomcloud"
+	golangsdk "github.com/opentelekomcloud/gophertelekomcloud"
 	"github.com/opentelekomcloud/gophertelekomcloud/pagination"
 )
 
@@ -53,6 +53,15 @@ type DeleteResult struct {
 func (r RecordSetPage) IsEmpty() (bool, error) {
 	s, err := ExtractRecordSets(r)
 	return len(s) == 0, err
+}
+
+// NextPageURL return next page URL based on ID of last RecordSet item.
+func (r RecordSetPage) NextPageURL() (string, error) {
+	s, err := ExtractRecordSets(r)
+	if err != nil {
+		return "", err
+	}
+	return r.WrapNextPageURL(s[len(s)-1].ID)
 }
 
 // ExtractRecordSets extracts a slice of RecordSets from a List result.
